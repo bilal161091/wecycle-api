@@ -1,7 +1,10 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+
+app.set('view engine', 'ejs');
+
 
 mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds033831.mongolab.com:33831/heroku_app33373738');
 
@@ -13,7 +16,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
-    res.send('<h1>Hello, Welcome to WE-CYCLE!</h1>');
+    res.render('default');
 });
 
 app.get('/items', function(req, res) {
@@ -21,7 +24,11 @@ app.get('/items', function(req, res) {
 });
 
 app.get('/users', function(req, res){
-    res.send('list of users')
+    res.send('<h1>list of users</h1>')
+});
+
+app.get('/*', function(req, res){
+    res.send('Bad Request');
 });
 
 var User = mongoose.model('User', {
@@ -29,7 +36,7 @@ var User = mongoose.model('User', {
     password: String
 });
 
-var items = mongoose.model('items', {
+var item = mongoose.model('item', {
     title: String,
     description: String
 });
@@ -51,6 +58,25 @@ app.post('/users', function(req, res){
         });
     });
 });
+
+
+app.post('/item', function(req, res){
+    console.log("Params: " + req.body.title + "");
+    var item = new Item({
+        title: req.body.title,
+        description: req.body.description
+    });
+
+    console.log("About to save item");
+    item.save(function (err, newItem) {
+        if (err)
+            return console.error(err);
+        res.send({
+            message: "item successfully added"
+        });
+    });
+});
+
 
 app.listen(app.get('port'), function() {
     console.log("Node app is running at localhost:" + app.get('port'));
