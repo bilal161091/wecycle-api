@@ -6,7 +6,6 @@ var bodyParser = require('body-parser')
 mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds033831.mongolab.com:33831/heroku_app33373738');
 
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -14,13 +13,25 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
-    res.send('Hello World!');
+    res.send('<h1>Hello, Welcome to WE-CYCLE!</h1>');
 });
 
+app.get('/items', function(req, res) {
+    res.send('<h1>Welcome to the Items page</h1>');
+});
+
+app.get('/users', function(req, res){
+    res.send('list of users')
+});
 
 var User = mongoose.model('User', {
     email: String,
     password: String
+});
+
+var items = mongoose.model('items', {
+    title: String,
+    description: String
 });
 
 
