@@ -60,7 +60,7 @@ app.post('/users', function(req, res){
 });
 
 
-app.post('/item', function(req, res){
+app.post('/items', function(req, res){
     console.log("Params: " + req.body.title + "");
     var item = new Item({
         title: req.body.title,
