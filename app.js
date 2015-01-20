@@ -36,7 +36,7 @@ var User = mongoose.model('User', {
     password: String
 });
 
-var item = mongoose.model('item', {
+var Item = mongoose.model('Item', {
     title: String,
     description: String
 });
