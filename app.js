@@ -1,17 +1,10 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-
 
 app.set('view engine', 'ejs');
 
-
 mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds033831.mongolab.com:33831/heroku_app33373738');
-
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
@@ -21,11 +14,17 @@ app.get('/', function(req, res) {
 });
 
 app.get('/items', function(req, res) {
-    res.send('<h1>Welcome to the Items page</h1>');
+    var query = Item.where({});
+    query.find(function (err, items) {
+        res.send(items);
+    });
 });
 
 app.get('/users', function(req, res){
-    res.send('<h1>list of users</h1>')
+    var query = User.where({});
+    query.find(function (err, users){
+        res.send(users);
+    });
 });
 
 app.get('/*', function(req, res){
