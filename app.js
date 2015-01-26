@@ -3,6 +3,7 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
+
 app.set('view engine', 'ejs');
 
 
@@ -28,7 +29,8 @@ app.get('/users', function(req, res){
 });
 
 app.get('/*', function(req, res){
-    res.send('Bad Request');
+    res.status(404).send('sorry we can\'t find that');
+    res.status(500).send('something went wrong');
 });
 
 var User = mongoose.model('User', {
@@ -37,7 +39,7 @@ var User = mongoose.model('User', {
 });
 
 var Item = mongoose.model('Item', {
-    title: String,
+    name: String,
     description: String
 });
 
@@ -61,9 +63,9 @@ app.post('/users', function(req, res){
 
 
 app.post('/items', function(req, res){
-    console.log("Params: " + req.body.title + "");
+    console.log("Params: " + req.body.name + "");
     var item = new Item({
-        title: req.body.title,
+        name: req.body.name,
         description: req.body.description
     });
 
