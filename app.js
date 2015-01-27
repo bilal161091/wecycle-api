@@ -1,24 +1,17 @@
-/*
-    Module dependencies
-*/
-
 var restify = require('restify');
 var app = restify.createServer();
 var mongoose = require('mongoose');
 var http = require('http');
-var restifyRoutes = require('restify-routes');
-var fs = require('fs-extra');
+
+app
+    .use(restify.fullResponse())
+    .use(restify.bodyParser());
 
 mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds033831.mongolab.com:33831/heroku_app33373738');
 
 app.get('/', function(req, res) {
     res.send('default route');
 });
-
-fs.readdirSync(__dirname + '/Models').forEach(function(filename){
-    if(~filename.indexOf('.js')) require(__dirname + '/Models/' + filename);
-});
-
 
 app.get('/items', function(req, res) {
     var query = Item.where({});
@@ -34,9 +27,6 @@ app.get('/users', function(req, res){
     });
 });
 
-
-
-/*
 var User = mongoose.model('User', {
     email: String,
     password: String
@@ -46,19 +36,16 @@ var Item = mongoose.model('Item', {
     name: String,
     description: String
 });
-*/
-
-
 
 
 
 
 //post users
 app.post('/users', function(req, res){
-    console.log("Params: " + req.body.email + "");
+    console.log("Params: " + req.params.email + "");
     var user = new User({
-        email: req.body.email,
-        password: req.body.password
+        email: req.params.email,
+        password: req.params.password
     });
 
     console.log("About to save user");
@@ -73,10 +60,10 @@ app.post('/users', function(req, res){
 
 //post items
 app.post('/items', function(req, res){
-    console.log("Params: " + req.body.name + "");
+    console.log("Params: " + req.params.name + "");
     var item = new Item({
-        name: req.body.name,
-        description: req.body.description
+        name: req.params.name,
+        description: req.params.description
     });
 
     console.log("About to save item");
