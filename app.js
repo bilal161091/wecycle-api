@@ -8,10 +8,12 @@ app
     .use(restify.fullResponse())
     .use(restify.bodyParser());
 
+
 //connection to mongodb
 mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds033831.mongolab.com:33831/heroku_app33373738');
 
 
+//Models for database
 var User = mongoose.model('User', {
     email: String,
     password: String,
@@ -26,13 +28,18 @@ var Item = mongoose.model('Item', {
 });
 
 
+
+//default route
 app.get('/', function(req, res) {
     res.send('default route');
 });
 
 
+/**
+ * Users
+ */
 
-
+//get users
 app.get('/users', function(req, res){
     var query = User.where({});
     query.find(function (err, users){
@@ -68,9 +75,11 @@ app.post('/users', function(req, res){
 });
 
 
+/**
+ * Items
+ */
 
-
-
+//get items
 app.get('/items', function(req, res) {
     var query = Item.where({});
     query.find(function (err, items) {
@@ -88,6 +97,13 @@ app.get('/items/:item_id', function(req, res){
 //post items
 app.post('/items', function(req, res){
 
+    if (req.params.name == undefined || req.params.name == "") {
+        res.status(404);
+        res.send({
+            message:" No name defined "
+        });
+    }
+
     var item = new Item({
         name: req.params.name,
         description: req.params.description,
@@ -101,6 +117,24 @@ app.post('/items', function(req, res){
         res.send({
             message: "item successfully added"
         });
+    });
+});
+
+//delete item
+app.del('/items/:item_id', function (req, res) {
+    var query = Item.where({_id: req.params.item_id});
+    query.remove(function (err, items) {
+        if(err){
+            res.status(404);
+            res.send({
+                message:"items not deleted"
+            });
+        } else {
+            res.status(200);
+            res.send({
+                message:"items deleted"
+            });
+        }
     });
 });
 
