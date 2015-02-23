@@ -14,12 +14,12 @@ mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds0338
 
 
 //Models for database
-var User = mongoose.model('User', {
+/**var User = mongoose.model('User', {
     email: String,
     password: String,
     phone_number: String,
     name: String
-});
+});*/
 
 var Item = mongoose.model('Item', {
     name: String,
@@ -36,9 +36,6 @@ app.get('/', function(req, res) {
 
 
 /**
- * Users
- */
-
 //get users
 app.get('/users', function(req, res){
     var query = User.where({});
@@ -73,6 +70,7 @@ app.post('/users', function(req, res){
         });
     });
 });
+ */
 
 
 /**
@@ -127,12 +125,12 @@ app.del('/items/:item_id', function (req, res) {
         if(err){
             res.status(404);
             res.send({
-                message:"items not deleted"
+                message:"item not deleted"
             });
         } else {
             res.status(200);
             res.send({
-                message:"items deleted"
+                message:"item deleted"
             });
         }
     });
