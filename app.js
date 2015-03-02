@@ -126,6 +126,25 @@ app.post('/items', function(req, res){
         });
     });
 });
+//update item
+app.put('/items/:item_id', function (req, res){
+  Item.findById(req.params.item_id, function (err, item) {
+	  console.log(req.body.name);
+
+	var data = JSON.parse(req.body);
+    item.name = data.name;
+    item.description = data.description;
+    item.url = data.url;
+    item.save(function (err) {
+      if (!err) {
+        console.log("updated sucessfully");
+      } else {
+        console.log(err);
+      }
+      res.send(item);
+    });
+  });
+});
 
 //delete item
 app.del('/items/:item_id', function (req, res) {
