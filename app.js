@@ -24,7 +24,8 @@ mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds0338
 var Item = mongoose.model('Item', {
     name: String,
     description: String,
-    url: [String]
+    url: [String],
+    contact: String
 });
 
 
@@ -102,10 +103,18 @@ app.post('/items', function(req, res){
         });
     }
 
+    if (req.params.contact == undefined || req.params.contact == "") {
+        res.status(404);
+        res.send({
+           message:" Please give name and contact details "
+        });
+    }
+
     var item = new Item({
         name: req.params.name,
         description: req.params.description,
-        url: req.params.url.split(", ")
+        url: req.params.url.split(", "),
+        contact: req.params.contact
     });
 
 
