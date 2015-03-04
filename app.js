@@ -135,6 +135,7 @@ app.put('/items/:item_id', function (req, res){
     item.name = data.name;
     item.description = data.description;
     item.url = data.url;
+    item.contact = data.contact;
     item.save(function (err) {
       if (!err) {
         console.log("updated sucessfully");
