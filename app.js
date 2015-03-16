@@ -16,12 +16,12 @@ mongoose.connect('mongodb://heroku_app33373738:k0cja96r943p0h5p5rdbjok3sn@ds0338
 
 //Models for database
 var User = mongoose.model('User', {
-    _id: Number,
+    // _id: Number,
     email: String,
     password: String,
     phone_number: String,
-    name: String,
-    items: [{type: Schema.Types.ObjectId, ref: 'Item'}]
+    name: String
+    // items: [{type: Schema.Types.ObjectId, ref: 'Item'}]
 });
 
 var Item = mongoose.model('Item', {
@@ -56,9 +56,11 @@ app.get('/users/:user_id', function(req, res){
 });
 
 
-app.get('/Users/items', function (req, res) {
-    Item.find({_creator: req.params._id}).populate('items').populate('users').exec(function (err, item) {
+app.get('/users/:user_id/items', function (req, res) {
+    Item.find({_creator: req.params.user_id}).populate('items').populate('users').exec(function (err, item) {
         console.log(item);
+        console.log(err);
+        res.send(item);
     });
 });
 
@@ -67,7 +69,7 @@ app.get('/Users/items', function (req, res) {
 app.post('/users', function(req, res){
     //console.log("Params: " + req.params.email + "");
     var user = new User({
-        _id:req.params._id,
+        // _id:req.params._id,
         email: req.params.email,
         password: req.params.password,
         phone_number: req.params.phone_number,
@@ -105,8 +107,26 @@ app.get('/items/:item_id', function(req, res){
 });
 
 
+//put items
 
+app.put('/items/:item_id', function(req, res){
 
+    var query = Item.where({_id: req.params.item_id});
+    query.find({_id: req.params.item_id}, function (err, items) 
+    {
+        item.name = req.body.name;
+        item.description = req.body.description;
+        item.url = req.body.url;
+        req.item.save(function (err) {
+            if (!err) {
+                console.log("updated");
+            } else {
+                console.log(err);
+            }
+            res.send(204, item);
+        });
+    });
+});
 
 //post items
 app.post('/items', function(req, res){
@@ -118,7 +138,7 @@ app.post('/items', function(req, res){
         });
     }
 
-    if (req.params._creator == undefined || req.params._creator == "") {
+    if (req.params.user_email == undefined || req.params.user_email == "") {
         res.status(404);
         res.send({
            message:" Please give name and contact details "
@@ -132,28 +152,30 @@ app.post('/items', function(req, res){
         });
     }
 
-
-    var item = new Item({
-        name: req.params.name,
-        description: req.params.description,
-        url: req.params.url.split(", "),
-        _creator: User._id
-    });
-
-
-    item.save(function (err, newItem) {
-        if (err) {
-            res.status(404);
-            console.error(err);
-            res.send({
-                message: "Something went wrong"
-            })
-        } else {
-            res.status(200);
-            res.send({
-                message: "item successfully added"
-            })
-        }
+    var query = User.findOne({email: req.params.user_email});
+    query.exec(function (err, user) {
+        var item = new Item({
+            name: req.params.name,
+            description: req.params.description,
+            url: req.params.url.split(", "),
+            _creator: user._id
+        });
+        console.log(user)
+        item.save(function (err, newItem) {
+            if (err) {
+                res.status(404);
+                console.error(err);
+                res.send({
+                    message: "Something went wrong"
+                })
+            } else {
+                console.log(newItem);
+                res.status(200);
+                res.send({
+                    message: "item successfully added"
+                })
+            }
+        });        
     });
 });
 
@@ -194,12 +216,13 @@ app.put('/items/:item_id', function (req, res){
 app.del('/items/:item_id', function (req, res) {
 
     var query = Item.where({_id: req.params.item_id});
-    query.remove(function (err, items) {
+    query.remove(function (err) {
         if(err){
             res.status(404);
             res.send({
                 message:"item not deleted"
             });
+            console.log(err);
         } else {
             res.status(200);
             res.send({
