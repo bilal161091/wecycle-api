@@ -1,3 +1,5 @@
+require('./models');
+
 module.exports = function (app) {
 
 //default route
