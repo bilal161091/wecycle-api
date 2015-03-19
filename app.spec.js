@@ -1,7 +1,7 @@
 var frisby = require('frisby');
 
 
-frisby.create('testing the api is running')
+
     .get('http://localhost:5000/')
     .expectStatus(200)
 .toss();
