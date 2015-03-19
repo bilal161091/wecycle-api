@@ -1,11 +1,6 @@
 var frisby = require('frisby');
 
 
-
-    .get('http://localhost:5000/')
-    .expectStatus(200)
-.toss();
-
 //testing post items
 frisby.create('testing post items')
     .post('http://localhost:5000/items/', {
