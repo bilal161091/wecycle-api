@@ -4,9 +4,8 @@ module.exports = function (app) {
 
 //default route
     app.get('/', function(req, res) {
-        res.send('default route');
+        res.send('Welcome to wecycle, please visit this link : : to see our documentation');
     });
-
 
 
 //get users
@@ -14,21 +13,41 @@ module.exports = function (app) {
         var query = User.where({});
         query.find(function (err, users){
             res.send(users);
+            if(err) {
+                res.status(404);
+                res.send({
+                    message: "There was an error with getting your users"
+                });
+                console.log(err);
+            }
         });
     });
 
     app.get('/users/:user_id', function(req, res){
-        var query = User.where({_id: req.params._id});
+        var query = User.where({_id: req.params.user_id});
         query.find(function (err, users){
             res.send(users);
+            if(err) {
+                res.status(404);
+                res.send({
+                    message: "There was an error with getting your user by user id"
+                });
+                console.log(err)
+            }
         });
     });
 
-
+//Get item posted by user
     app.get('/users/:user_id/items', function (req, res) {
         Item.find({_creator: req.params.user_id}).populate('items').populate('users').exec(function (err, item) {
             console.log(item);
-            console.log(err);
+            if(err) {
+                console.log(err);
+                res.status(400);
+                res.send({
+                    message: "There was an error getting the users item"
+                })
+            }
             res.send(item);
         });
     });
@@ -47,12 +66,20 @@ module.exports = function (app) {
 
         console.log("About to save user");
         user.save(function (err, newUser) {
-            if (err)
-                return console.error(err);
-            res.send({
-                message: "User successfully added"
-            });
+            if (err) {
+                console.error(err);
+                res.status(404);
+                res.send({
+                    message: "There was an error"
+                })
+            } else {
+                res.status(200);
+                res.send({
+                    message: "User successfully added"
+                });
+            }
         });
+
     });
 
 
@@ -64,36 +91,30 @@ module.exports = function (app) {
     app.get('/items', function(req, res) {
         var query = Item.where({});
         query.find(function (err, items) {
+            res.status(200);
             res.send(items);
+            if(err){
+                console.log(err);
+                res.status(404);
+                res.send({
+                    message: "The was an in getting your item"
+                })
+            }
         });
     });
 
     app.get('/items/:item_id', function(req, res){
         var query = Item.where({_id: req.params.item_id});
         query.find(function (err, items){
+            res.status(200);
             res.send(items);
-        });
-    });
-
-
-//put items
-
-    app.put('/items/:item_id', function(req, res){
-
-        var query = Item.where({_id: req.params.item_id});
-        query.find({_id: req.params.item_id}, function (err, items)
-        {
-            item.name = req.body.name;
-            item.description = req.body.description;
-            item.url = req.body.url;
-            req.item.save(function (err) {
-                if (!err) {
-                    console.log("updated");
-                } else {
-                    console.log(err);
-                }
-                res.send(204, item);
-            });
+            if(err){
+                console.log(err);
+                res.status(404);
+                res.send({
+                    message: "There was an error with getting your item by item id"
+                })
+            }
         });
     });
 
@@ -129,7 +150,7 @@ module.exports = function (app) {
                 url: req.params.url.split(", "),
                 _creator: user._id
             });
-            console.log(user)
+            console.log(user);
             item.save(function (err, newItem) {
                 if (err) {
                     res.status(404);
@@ -200,5 +221,5 @@ module.exports = function (app) {
             }
         });
     });
-
 };
+
