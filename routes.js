@@ -4,7 +4,7 @@ module.exports = function (app) {
 
 //default route
     app.get('/', function(req, res) {
-        res.send('Welcome to wecycle, please visit this link : : to see our documentation');
+        res.send('Welcome to the wecycle-api, please visit this link : : to view our documentation');
     });
 
 
@@ -16,7 +16,7 @@ module.exports = function (app) {
             if(err) {
                 res.status(404);
                 res.send({
-                    message: "There was an error with getting your users"
+                    message: "There was an error with getting the list of users"
                 });
                 console.log(err);
             }
@@ -30,7 +30,7 @@ module.exports = function (app) {
             if(err) {
                 res.status(404);
                 res.send({
-                    message: "There was an error with getting your user by user id"
+                    message: "There was an error with getting the user by the users id"
                 });
                 console.log(err)
             }
@@ -73,9 +73,9 @@ module.exports = function (app) {
                     message: "There was an error"
                 })
             } else {
-                res.status(200);
+                res.status(201);
                 res.send({
-                    message: "User successfully added"
+                    message: "User successfully created and added"
                 });
             }
         });
@@ -97,7 +97,7 @@ module.exports = function (app) {
                 console.log(err);
                 res.status(404);
                 res.send({
-                    message: "The was an in getting your item"
+                    message: "The was an error getting the list of items"
                 })
             }
         });
@@ -156,13 +156,13 @@ module.exports = function (app) {
                     res.status(404);
                     console.error(err);
                     res.send({
-                        message: "Something went wrong"
+                        message: "Something went wrong with trying to post your item"
                     })
                 } else {
                     console.log(newItem);
-                    res.status(200);
+                    res.status(201);
                     res.send({
-                        message: "item successfully added"
+                        message: "item successfully created and added"
                     })
                 }
             });

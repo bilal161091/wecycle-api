@@ -2,7 +2,6 @@ var restify = require('restify');
 var app = restify.createServer();
 var mongoose = require('mongoose');
 var http = require('http');
-//var Schema = mongoose.Schema;
 require('./routes')(app);
 models = require('./models');
 User = models.User;
