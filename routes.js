@@ -58,11 +58,13 @@ module.exports = function (app) {
         //console.log("Params: " + req.params.email + "");
         var user = new User({
             // _id:req.params._id,
-            email: req.params.email,
-            password: req.params.password,
-            phone_number: req.params.phone_number,
-            name: req.params.name
+            email: req.body.email,
+            password: req.body.password,
+            phone_number: req.body.phone_number,
+            name: req.body.name
         });
+
+        //console.log("Params: " + req.params.email + "");
 
         console.log("About to save user");
         user.save(function (err, newUser) {
@@ -121,33 +123,26 @@ module.exports = function (app) {
 //post items
     app.post('/items', function(req, res){
 
-        if (req.params.name == undefined || req.params.name == "") {
+        if (req.body.name == undefined || req.body.name == "") {
             res.status(404);
             res.send({
                 message:" No name defined "
             });
         }
 
-        if (req.params.user_email == undefined || req.params.user_email == "") {
-            res.status(404);
-            res.send({
-                message:" Please give name and contact details "
-            });
-        }
-
-        if (req.params.url == undefined || req.params.url == "") {
+        if (req.body.url == undefined || req.body.url == "") {
             res.status(404);
             res.send({
                 message:"Please give url of photos of items"
             });
         }
 
-        var query = User.findOne({email: req.params.user_email});
+        var query = User.findOne({email: req.body.user_email});
         query.exec(function (err, user) {
             var item = new Item({
-                name: req.params.name,
-                description: req.params.description,
-                url: req.params.url.split(", "),
+                name: req.body.name,
+                description: req.body.description,
+                url: req.body.url.split(", "),
                 _creator: user._id
             });
             console.log(user);
